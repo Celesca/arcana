@@ -17,13 +17,14 @@ const books = [
   { title: "Rituals for the Soul", author: "S. Vanora", price: "฿590", color: "wine", symbol: "☿" },
 ];
 
-function Icon({ name }: { name: "search" | "cart" | "user" | "menu" | "arrow" }) {
+function Icon({ name }: { name: "search" | "cart" | "user" | "menu" | "arrow" | "chat" }) {
   const paths = {
     search: <><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></>,
     cart: <><path d="M3 4h2l2.5 11h10L20 7H6" /><circle cx="10" cy="20" r="1" /><circle cx="17" cy="20" r="1" /></>,
     user: <><circle cx="12" cy="8" r="4" /><path d="M4 21c.8-4 3.4-6 8-6s7.2 2 8 6" /></>,
     menu: <><path d="M4 7h16M4 12h16M4 17h16" /></>,
     arrow: <path d="m9 18 6-6-6-6" />,
+    chat: <><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.7 8.7 0 0 1-3.5-.7L4 20l1.4-3.7A7.2 7.2 0 0 1 4 11.5a7.5 7.5 0 0 1 8-7.5 7.5 7.5 0 0 1 8 7.5Z" /><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" strokeWidth="2.4" /></>,
   };
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
@@ -32,6 +33,7 @@ export default function Home() {
   const [slide, setSlide] = useState(0);
   const [search, setSearch] = useState("");
   const [cartCount, setCartCount] = useState(0);
+  const [chatOpen, setChatOpen] = useState(false);
   const slides = [
     { eyebrow: "THE ARCANA COLLECTION", title: "The wisdom you seek\nis already within.", detail: "สำรวจไพ่ทาโรต์ หนังสือ และเครื่องมือสำหรับ\nการเดินทางอันลึกซึ้งของคุณ", cta: "เลือกสำรับไพ่ของคุณ", card: "THE\nHIGH\nPRIESTESS", number: "II" },
     { eyebrow: "NEW MOON EDIT", title: "A quiet ritual\nfor new beginnings.", detail: "หนังสือและสำรับไพ่คัดสรร เพื่อช่วงเวลาที่คุณ\nอยากฟังเสียงจากภายในอีกครั้ง", cta: "ค้นพบคอลเลกชัน", card: "THE\nMOON", number: "XVIII" },
@@ -81,6 +83,14 @@ export default function Home() {
         <div className="book-grid">{books.map((book) => <article className="book" key={book.title}><div className={`book-cover ${book.color}`}><span className="cover-sigil">{book.symbol}</span><span className="cover-line" /><h3>{book.title}</h3><small>ARCANA PRESS</small></div><div className="book-info"><p>{book.author}</p><div><b>{book.price}</b><button onClick={() => setCartCount((count) => count + 1)} aria-label={`เพิ่ม ${book.title} ลงตะกร้า`}>+</button></div></div></article>)}</div>
       </section>
       <footer>ARCANA <span>✦</span> Books for the seekers, dreamers, and readers of signs.</footer>
+      <div className="chat-widget">
+        {chatOpen && <div className="chat-panel" role="dialog" aria-label="แชตกับ ARCANA">
+          <div className="chat-panel-head"><span><i>✦</i> ARCANA Support</span><button onClick={() => setChatOpen(false)} aria-label="ปิดแชต">×</button></div>
+          <div className="chat-message"><span>สวัสดีค่ะ</span><p>ให้เราช่วยเลือกสำรับไพ่ หรือแนะนำหนังสือให้ไหม?</p></div>
+          <button className="line-chat">เริ่มแชตผ่าน LINE <Icon name="arrow" /></button>
+        </div>}
+        <button className="chat-button" onClick={() => setChatOpen((open) => !open)} aria-expanded={chatOpen} aria-label="เปิดแชต"><Icon name="chat" /><span>แชตกับเรา</span></button>
+      </div>
     </main>
   );
 }
