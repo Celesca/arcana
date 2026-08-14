@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { products } from "../lib/catalog";
+import { ProductCard } from "../components/product-card";
 
 const categories = [
   { icon: "☽", title: "ไพ่ทาโรต์", text: "สำรับไพ่สำหรับทุกเส้นทาง" },
@@ -10,30 +13,15 @@ const categories = [
   { icon: "☾", title: "พิธีกรรม", text: "เติมพลังให้ทุกวันของคุณ" },
 ];
 
-const books = [
-  { title: "The Moonlit Tarot", author: "A. Morningstar", price: "฿890", color: "violet", symbol: "☾" },
-  { title: "The Art of Reading Cards", author: "Maeve Blackwood", price: "฿645", color: "plum", symbol: "✧" },
-  { title: "Cosmic Cycles", author: "Luna Ardent", price: "฿720", color: "blue", symbol: "♆" },
-  { title: "Rituals for the Soul", author: "S. Vanora", price: "฿590", color: "wine", symbol: "☿" },
-];
-
-function Icon({ name }: { name: "search" | "cart" | "user" | "menu" | "arrow" | "chat" }) {
+function Icon({ name }: { name: "arrow" }) {
   const paths = {
-    search: <><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></>,
-    cart: <><path d="M3 4h2l2.5 11h10L20 7H6" /><circle cx="10" cy="20" r="1" /><circle cx="17" cy="20" r="1" /></>,
-    user: <><circle cx="12" cy="8" r="4" /><path d="M4 21c.8-4 3.4-6 8-6s7.2 2 8 6" /></>,
-    menu: <><path d="M4 7h16M4 12h16M4 17h16" /></>,
     arrow: <path d="m9 18 6-6-6-6" />,
-    chat: <><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.7 8.7 0 0 1-3.5-.7L4 20l1.4-3.7A7.2 7.2 0 0 1 4 11.5a7.5 7.5 0 0 1 8-7.5 7.5 7.5 0 0 1 8 7.5Z" /><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" strokeWidth="2.4" /></>,
   };
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
 
 export default function Home() {
   const [slide, setSlide] = useState(0);
-  const [search, setSearch] = useState("");
-  const [cartCount, setCartCount] = useState(0);
-  const [chatOpen, setChatOpen] = useState(false);
   const slides = [
     { eyebrow: "THE ARCANA COLLECTION", title: "The wisdom you seek\nis already within.", detail: "สำรวจไพ่ทาโรต์ หนังสือ และเครื่องมือสำหรับ\nการเดินทางอันลึกซึ้งของคุณ", cta: "เลือกสำรับไพ่ของคุณ", card: "THE\nHIGH\nPRIESTESS", number: "II" },
     { eyebrow: "NEW MOON EDIT", title: "A quiet ritual\nfor new beginnings.", detail: "หนังสือและสำรับไพ่คัดสรร เพื่อช่วงเวลาที่คุณ\nอยากฟังเสียงจากภายในอีกครั้ง", cta: "ค้นพบคอลเลกชัน", card: "THE\nMOON", number: "XVIII" },
@@ -45,24 +33,13 @@ export default function Home() {
 
   return (
     <main>
-      <div className="announcement">✦ ส่งฟรีเมื่อสั่งซื้อครบ ฿1,200 <span>•</span> สมาชิกใหม่รับส่วนลด 10%</div>
-      <header className="header">
-        <div className="utility"><span>THE MYSTIC&apos;S LIBRARY</span><div><a href="#about">เรื่องราวของเรา</a><button className="login"><Icon name="user" /> เข้าสู่ระบบ</button></div></div>
-        <nav className="nav" aria-label="เมนูหลัก">
-          <button className="mobile-menu" aria-label="เปิดเมนู"><Icon name="menu" /></button>
-          <a className="brand" href="#top" aria-label="ARCANA home"><span className="brand-mark">A</span><span>ARCANA<small>BOOKS & TAROT</small></span></a>
-          <div className="search"><Icon name="search" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="ค้นหาหนังสือ, สำรับไพ่, ผู้เขียน..." /><kbd>⌘ K</kbd></div>
-          <div className="nav-actions"><a href="#categories">หมวดหมู่</a><a href="#new">มาใหม่</a><button className="cart" aria-label="ตะกร้าสินค้า"><Icon name="cart" />{cartCount > 0 && <b>{cartCount}</b>}</button></div>
-        </nav>
-      </header>
-
       <section className="hero" id="top">
         <div className="hero-stars" aria-hidden="true">✦　·　✧　·　⋆　·　✦</div>
         <div className="hero-copy">
           <p className="eyebrow">{current.eyebrow}</p>
           <h1>{current.title.split("\n").map((line) => <span key={line}>{line}</span>)}</h1>
           <p className="hero-detail">{current.detail.split("\n").map((line) => <span key={line}>{line}</span>)}</p>
-          <a className="primary-button" href="#new">{current.cta}<Icon name="arrow" /></a>
+          <Link className="primary-button" href="/products">{current.cta}<Icon name="arrow" /></Link>
         </div>
         <div className="card-orbit" aria-label={current.card.replaceAll("\n", " ")}>
           <div className="orbit orbit-one" /><div className="orbit orbit-two" />
@@ -74,23 +51,15 @@ export default function Home() {
       </section>
 
       <section className="categories section" id="categories">
-        <div className="section-heading"><div><p className="eyebrow">FIND YOUR PATH</p><h2>เลือกตามสิ่งที่ใจเรียกร้อง</h2></div><a href="#all">ดูทุกหมวดหมู่ <Icon name="arrow" /></a></div>
-        <div className="category-grid">{categories.map((category) => <a href="#all" className="category" key={category.title}><span className="category-icon">{category.icon}</span><span><b>{category.title}</b><small>{category.text}</small></span><Icon name="arrow" /></a>)}</div>
+        <div className="section-heading"><div><p className="eyebrow">FIND YOUR PATH</p><h2>เลือกตามสิ่งที่ใจเรียกร้อง</h2></div><Link href="/products">ดูทุกหมวดหมู่ <Icon name="arrow" /></Link></div>
+        <div className="category-grid">{categories.map((category) => <Link href={`/products?category=${encodeURIComponent(category.title)}`} className="category" key={category.title}><span className="category-icon">{category.icon}</span><span><b>{category.title}</b><small>{category.text}</small></span><Icon name="arrow" /></Link>)}</div>
       </section>
 
       <section className="books-section section" id="new">
-        <div className="section-heading"><div><p className="eyebrow">JUST ARRIVED</p><h2>มาใหม่ในห้องสมุด</h2></div><a href="#all">เลือกชมทั้งหมด <Icon name="arrow" /></a></div>
-        <div className="book-grid">{books.map((book) => <article className="book" key={book.title}><div className={`book-cover ${book.color}`}><span className="cover-sigil">{book.symbol}</span><span className="cover-line" /><h3>{book.title}</h3><small>ARCANA PRESS</small></div><div className="book-info"><p>{book.author}</p><div><b>{book.price}</b><button onClick={() => setCartCount((count) => count + 1)} aria-label={`เพิ่ม ${book.title} ลงตะกร้า`}>+</button></div></div></article>)}</div>
+        <div className="section-heading"><div><p className="eyebrow">JUST ARRIVED</p><h2>มาใหม่ในห้องสมุด</h2></div><Link href="/products">เลือกชมทั้งหมด <Icon name="arrow" /></Link></div>
+        <div className="book-grid">{products.slice(0, 4).map((product) => <ProductCard product={product} key={product.id} />)}</div>
       </section>
       <footer>ARCANA <span>✦</span> Books for the seekers, dreamers, and readers of signs.</footer>
-      <div className="chat-widget">
-        {chatOpen && <div className="chat-panel" role="dialog" aria-label="แชตกับ ARCANA">
-          <div className="chat-panel-head"><span><i>✦</i> ARCANA Support</span><button onClick={() => setChatOpen(false)} aria-label="ปิดแชต">×</button></div>
-          <div className="chat-message"><span>สวัสดีค่ะ</span><p>ให้เราช่วยเลือกสำรับไพ่ หรือแนะนำหนังสือให้ไหม?</p></div>
-          <button className="line-chat">เริ่มแชตผ่าน LINE <Icon name="arrow" /></button>
-        </div>}
-        <button className="chat-button" onClick={() => setChatOpen((open) => !open)} aria-expanded={chatOpen} aria-label="เปิดแชต"><Icon name="chat" /><span>แชตกับเรา</span></button>
-      </div>
     </main>
   );
 }

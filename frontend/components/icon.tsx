@@ -1,0 +1,6 @@
+export function Icon({ name }: { name: "search" | "cart" | "user" | "menu" | "arrow" | "chat" | "google" | "trash" | "minus" | "plus" }) {
+  const paths = {
+    search: <><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></>, cart: <><path d="M3 4h2l2.5 11h10L20 7H6" /><circle cx="10" cy="20" r="1" /><circle cx="17" cy="20" r="1" /></>, user: <><circle cx="12" cy="8" r="4" /><path d="M4 21c.8-4 3.4-6 8-6s7.2 2 8 6" /></>, menu: <><path d="M4 7h16M4 12h16M4 17h16" /></>, arrow: <path d="m9 18 6-6-6-6" />, chat: <><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.7 8.7 0 0 1-3.5-.7L4 20l1.4-3.7A7.2 7.2 0 0 1 4 11.5a7.5 7.5 0 0 1 8-7.5 7.5 7.5 0 0 1 8 7.5Z" /><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" strokeWidth="2.4" /></>, google: <path d="M21.6 12.2c0-.7-.1-1.3-.2-2H12v3.8h5.4a4.5 4.5 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3ZM12 22c2.7 0 5- .9 6.6-2.5l-3.2-2.5c-.9.6-2 .9-3.4.9-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Zm-5.6-8.2a6 6 0 0 1 0-3.7V7.5H3.1a10 10 0 0 0 0 9l3.3-2.7Z" />, trash: <><path d="M4 7h16M10 11v6M14 11v6M9 7l1-3h4l1 3M6 7l1 13h10l1-13" /></>, minus: <path d="M5 12h14" />, plus: <path d="M12 5v14M5 12h14" />,
+  };
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
+}
