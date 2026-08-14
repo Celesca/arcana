@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { products } from "../lib/catalog";
 import { ProductCard } from "../components/product-card";
+import { useShop } from "./providers";
 
 const categories = [
   { icon: "☽", title: "ไพ่ทาโรต์", text: "สำรับไพ่สำหรับทุกเส้นทาง" },
@@ -21,6 +21,7 @@ function Icon({ name }: { name: "arrow" }) {
 }
 
 export default function Home() {
+  const { products } = useShop();
   const [slide, setSlide] = useState(0);
   const slides = [
     { eyebrow: "THE ARCANA COLLECTION", title: "The wisdom you seek\nis already within.", detail: "สำรวจไพ่ทาโรต์ หนังสือ และเครื่องมือสำหรับ\nการเดินทางอันลึกซึ้งของคุณ", cta: "เลือกสำรับไพ่ของคุณ", card: "THE\nHIGH\nPRIESTESS", number: "II" },
@@ -30,6 +31,7 @@ export default function Home() {
   const current = slides[slide];
 
   function nextSlide() { setSlide((value) => (value + 1) % slides.length); }
+  useEffect(() => { const timer = window.setInterval(nextSlide, 5500); return () => window.clearInterval(timer); }, []);
 
   return (
     <main>
