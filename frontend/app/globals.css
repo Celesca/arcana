@@ -98,9 +98,11 @@ footer { margin-top:16px; padding:34px 20px; background:var(--ink); color:#e4d9e
 /* Single-row navigation and working mobile menu */
 .nav { grid-template-columns:220px minmax(300px,1fr) auto; gap:24px; }
 .nav-actions { gap:22px; font-size:14px; font-weight:600; white-space:nowrap; }
-.nav-actions > a:not(.cart) { position:relative; }
-.nav-actions > a:not(.cart):after { content:""; position:absolute; right:0; bottom:-6px; left:0; height:1px; background:#4b2860; transform:scaleX(0); transition:transform .2s; }
-.nav-actions > a:not(.cart):hover:after { transform:scaleX(1); }
+.nav-actions > a:not(.cart):not(.nav-dash) { position:relative; }
+.nav-actions > a:not(.cart):not(.nav-dash):after { content:""; position:absolute; right:0; bottom:-6px; left:0; height:1px; background:#4b2860; transform:scaleX(0); transition:transform .2s; }
+.nav-actions > a:not(.cart):not(.nav-dash):hover:after { transform:scaleX(1); }
+.nav-dash { height:34px; display:inline-flex; align-items:center; padding:0 15px; border-radius:6px; background:var(--gold); color:var(--ink); font-size:12px; font-weight:700; box-shadow:0 4px 12px rgba(217,181,111,.35); transition:transform .15s,filter .15s; }
+.nav-actions a.nav-dash:hover { color:var(--ink); filter:brightness(1.06); transform:translateY(-1px); }
 .nav-login { height:39px; display:flex; align-items:center; gap:7px; padding:0 14px; border:1px solid #47215f; border-radius:6px; background:#47215f; color:#fff; cursor:pointer; font:600 13px "Noto Sans Thai",sans-serif; box-shadow:0 4px 12px rgba(56,25,75,.15); }
 .nav-login:hover { background:#2f143f; border-color:#2f143f; }.nav-login svg { width:16px; }.nav-login.logged-in { color:#47215f; background:#f5f0f7; box-shadow:none; }
 .mobile-drawer { display:none; }
@@ -108,7 +110,7 @@ footer { margin-top:16px; padding:34px 20px; background:var(--ink); color:#e4d9e
   .nav { grid-template-columns:190px minmax(250px,1fr) auto; margin-right:28px; margin-left:28px; gap:17px; }
   .nav-actions { gap:14px; font-size:13px; }.nav-login { padding:0 11px; }.nav-login span { display:none; }
 }
-@media (max-width:1050px) and (min-width:841px) { .nav-actions > a:nth-child(3) { display:none; }.nav-actions { gap:11px; } }
+@media (max-width:1050px) and (min-width:841px) { .nav-actions { gap:11px; }.nav-dash { padding:0 11px; font-size:11px; } }
 @media (max-width:840px) {
   .header { position:sticky; }
   .nav { grid-template-columns:auto 1fr auto; margin:0 17px; gap:12px; }
@@ -119,7 +121,7 @@ footer { margin-top:16px; padding:34px 20px; background:var(--ink); color:#e4d9e
   .mobile-drawer.open { max-height:430px; visibility:visible; padding:18px; border-top-color:#eee7f0; opacity:1; }
   .mobile-search { height:43px; display:flex; align-items:center; gap:9px; padding-left:12px; border:1px solid #e5dce9; border-radius:7px; background:#f8f5f9; }
   .mobile-search svg { width:17px; color:#674f75; }.mobile-search input { min-width:0; flex:1; border:0; outline:0; background:transparent; font-size:12px; }.mobile-search button { align-self:stretch; padding:0 15px; border:0; border-radius:0 6px 6px 0; background:#482265; color:#fff; font:600 11px "Noto Sans Thai",sans-serif; }
-  .mobile-links { display:grid; margin:14px 0; border-top:1px solid #eee7f0; }.mobile-links a { min-height:53px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #eee7f0; color:#3c2549; font-size:15px; font-weight:600; }.mobile-links b { color:#9a83a7; font-size:16px; }.mobile-links em { color:#8d7b97; font-size:11px; font-style:normal; font-weight:400; }
+  .mobile-links { display:grid; margin:14px 0; border-top:1px solid #eee7f0; }.mobile-links a { min-height:53px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #eee7f0; color:#3c2549; font-size:15px; font-weight:600; }.mobile-links b { color:#9a83a7; font-size:16px; }.mobile-links em { color:#8d7b97; font-size:11px; font-style:normal; font-weight:400; }.mobile-links a.nav-dash { margin:8px 0 6px; padding:0 13px; border:1px solid #d9b56f; border-radius:7px; background:#fdf6e6; }.mobile-links a.nav-dash b { color:#a8823a; }
   .mobile-login { width:100%; height:43px; display:flex; align-items:center; justify-content:center; gap:8px; border:1px solid #482265; border-radius:6px; background:#482265; color:#fff; font:600 13px "Noto Sans Thai",sans-serif; }.mobile-login.secondary { color:#482265; background:#fff; }.mobile-login svg { width:16px; }
 }
 
