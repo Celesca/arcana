@@ -37,13 +37,13 @@ export default function Home() {
     <main>
       <section className="hero" id="top">
         <div className="hero-stars" aria-hidden="true">✦　·　✧　·　⋆　·　✦</div>
-        <div className="hero-copy">
+        <div className="hero-copy slide-fade" key={slide}>
           <p className="eyebrow">{current.eyebrow}</p>
           <h1>{current.title.split("\n").map((line) => <span key={line}>{line}</span>)}</h1>
           <p className="hero-detail">{current.detail.split("\n").map((line) => <span key={line}>{line}</span>)}</p>
           <Link className="primary-button" href="/products">{current.cta}<Icon name="arrow" /></Link>
         </div>
-        <div className="card-orbit" aria-label={current.card.replaceAll("\n", " ")}>
+        <div className="card-orbit" key={slide} aria-label={current.card.replaceAll("\n", " ")}>
           <div className="orbit orbit-one" /><div className="orbit orbit-two" />
           <div className="tarot-card"><span className="card-number">{current.number}</span><div className="card-sun">☾</div><strong>{current.card.split("\n").map((line) => <span key={line}>{line}</span>)}</strong><i>ARCANA</i><span className="card-number bottom">{current.number}</span></div>
         </div>
