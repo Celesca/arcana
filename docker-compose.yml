@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: arcana-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-arcana}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-arcana}
+      POSTGRES_DB: ${POSTGRES_DB:-arcana}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-arcana} -d ${POSTGRES_DB:-arcana}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - arcana
+
+  api:
+    build: ./backend
+    container_name: arcana-api
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      PORT: 4000
+      DATABASE_URL: postgres://${POSTGRES_USER:-arcana}:${POSTGRES_PASSWORD:-arcana}@db:5432/${POSTGRES_DB:-arcana}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@arcana.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-arcana123}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    networks:
+      - arcana
+
+  frontend:
+    build: ./frontend
+    container_name: arcana-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4000}
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+    networks:
+      - arcana
+
+networks:
+  arcana:
+    driver: bridge
+
+volumes:
+  pgdata:
