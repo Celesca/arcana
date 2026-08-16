@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ProductCard } from "../components/product-card";
 import { useShop } from "./providers";
@@ -23,33 +23,80 @@ function Icon({ name }: { name: "arrow" }) {
 export default function Home() {
   const { products } = useShop();
   const [slide, setSlide] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
   const slides = [
     { eyebrow: "THE ARCANA COLLECTION", title: "The wisdom you seek\nis already within.", detail: "สำรวจไพ่ทาโรต์ หนังสือ และเครื่องมือสำหรับ\nการเดินทางอันลึกซึ้งของคุณ", cta: "เลือกสำรับไพ่ของคุณ", card: "THE\nHIGH\nPRIESTESS", number: "II" },
     { eyebrow: "NEW MOON EDIT", title: "A quiet ritual\nfor new beginnings.", detail: "หนังสือและสำรับไพ่คัดสรร เพื่อช่วงเวลาที่คุณ\nอยากฟังเสียงจากภายในอีกครั้ง", cta: "ค้นพบคอลเลกชัน", card: "THE\nMOON", number: "XVIII" },
     { eyebrow: "FOR CURIOUS SOULS", title: "Read the signs.\nTrust your path.", detail: "เริ่มเรียนรู้ศาสตร์ไพ่ทาโรต์ผ่านหนังสือที่เข้าใจง่าย\nและสำรับไพ่ที่งดงาม", cta: "เริ่มต้นที่นี่", card: "THE\nSTAR", number: "XVII" },
   ];
-  const current = slides[slide];
 
-  function nextSlide() { setSlide((value) => (value + 1) % slides.length); }
-  useEffect(() => { const timer = window.setInterval(nextSlide, 5500); return () => window.clearInterval(timer); }, []);
+  const nextSlide = () => setSlide((value) => (value + 1) % slides.length);
+  const prevSlide = () => setSlide((value) => (value + slides.length - 1) % slides.length);
+
+  useEffect(() => {
+    const timer = window.setInterval(nextSlide, 5500);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+    touchEndX.current = null;
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+  const onTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return;
+    const distance = touchStartX.current - touchEndX.current;
+    if (distance > 50) nextSlide();
+    if (distance < -50) prevSlide();
+  };
 
   return (
     <main>
       <section className="hero" id="top">
         <div className="hero-stars" aria-hidden="true">✦　·　✧　·　⋆　·　✦</div>
-        <div className="hero-copy">
-          <p className="eyebrow">{current.eyebrow}</p>
-          <h1>{current.title.split("\n").map((line) => <span key={line}>{line}</span>)}</h1>
-          <p className="hero-detail">{current.detail.split("\n").map((line) => <span key={line}>{line}</span>)}</p>
-          <Link className="primary-button" href="/products">{current.cta}<Icon name="arrow" /></Link>
+
+        <div
+          className="hero-track"
+          style={{ transform: `translateX(-${slide * 100}%)` }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          {slides.map((s, index) => (
+            <div className={`hero-slide ${index === slide ? "active" : ""}`} key={index}>
+              <div className="hero-slide-inner">
+                <div className="hero-copy">
+                  <p className="eyebrow">{s.eyebrow}</p>
+                  <h1>{s.title.split("\n").map((line) => <span key={line}>{line}</span>)}</h1>
+                  <p className="hero-detail">{s.detail.split("\n").map((line) => <span key={line}>{line}</span>)}</p>
+                  <Link className="primary-button" href="/products">{s.cta}<Icon name="arrow" /></Link>
+                </div>
+                <div className="card-orbit" aria-label={s.card.replaceAll("\n", " ")}>
+                  <div className="orbit orbit-one" /><div className="orbit orbit-two" />
+                  <div className="tarot-card">
+                    <span className="card-number">{s.number}</span>
+                    <div className="card-sun">☾</div>
+                    <strong>{s.card.split("\n").map((line) => <span key={line}>{line}</span>)}</strong>
+                    <i>ARCANA</i>
+                    <span className="card-number bottom">{s.number}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="card-orbit" aria-label={current.card.replaceAll("\n", " ")}>
-          <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-          <div className="tarot-card"><span className="card-number">{current.number}</span><div className="card-sun">☾</div><strong>{current.card.split("\n").map((line) => <span key={line}>{line}</span>)}</strong><i>ARCANA</i><span className="card-number bottom">{current.number}</span></div>
-        </div>
-        <button className="hero-arrow hero-prev" onClick={() => setSlide((slide + slides.length - 1) % slides.length)} aria-label="สไลด์ก่อนหน้า">‹</button>
+
+        <button className="hero-arrow hero-prev" onClick={prevSlide} aria-label="สไลด์ก่อนหน้า">‹</button>
         <button className="hero-arrow hero-next" onClick={nextSlide} aria-label="สไลด์ถัดไป">›</button>
-        <div className="hero-dots">{slides.map((_, index) => <button key={index} onClick={() => setSlide(index)} aria-label={`เลือกสไลด์ ${index + 1}`} className={index === slide ? "active" : ""} />)}</div>
+        <div className="hero-dots">
+          {slides.map((_, index) => (
+            <button key={index} onClick={() => setSlide(index)} aria-label={`เลือกสไลด์ ${index + 1}`} className={index === slide ? "active" : ""} />
+          ))}
+        </div>
       </section>
 
       <section className="categories section" id="categories">
